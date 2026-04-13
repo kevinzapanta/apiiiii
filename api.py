@@ -65,11 +65,25 @@ def train():
         RMSE_per_ayam = RMSE / avg_ayam
 
         # Prediksi ringkasan
-        harian_telur_kg = y.mean()
-        bulanan_telur_kg = y.sum()
-        telur_per_ayam = harian_telur_kg / df["jumlah_ayam"].mean()
-        harian_telur_butir = harian_telur_kg / 0.06  # 1 telur ≈ 60 gr
-        bulanan_telur_butir = bulanan_telur_kg / 0.06
+# =========================
+# 🔥 PREDIKSI DARI MODEL (WAJIB)
+# =========================
+
+# Ambil data terakhir
+last_row = X.iloc[[-1]]
+
+# Prediksi dari model
+prediksi_harian = float(model.predict(last_row)[0])
+
+# Estimasi bulanan
+prediksi_bulanan = prediksi_harian * 30
+
+# Turunan
+jumlah_ayam_avg = df["jumlah_ayam"].mean()
+
+telur_per_ayam = prediksi_harian / jumlah_ayam_avg if jumlah_ayam_avg else 0
+harian_telur_butir = prediksi_harian / 0.06
+bulanan_telur_butir = prediksi_bulanan / 0.06
 
         # Save model
         with open("model_telur.pkl", "wb") as f:
