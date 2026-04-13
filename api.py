@@ -103,7 +103,7 @@ bulanan_telur_butir = prediksi_bulanan / 0.06
             "Test_rows": len(X_test),
             "Features_used": list(X.columns),
             "prediksi": {
-                "harian_telur_kg": round(harian_telur_kg, 2),
+                "harian_telur_kg": round(prediksi_harian, 2),
                 "bulanan_telur_kg": round(bulanan_telur_kg, 2),
                 "telur_per_ayam": round(telur_per_ayam, 4),
                 "harian_telur_butir": int(round(harian_telur_butir)),
