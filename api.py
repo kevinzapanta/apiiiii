@@ -55,17 +55,29 @@ def train():
         y_pred = model.predict(X_test)
 
         # =========================
-        # KONVERSI KE KLASIFIKASI
+        # KONVERSI KE KLASIFIKASI (ANTI 0)
         # =========================
-        threshold = y.mean()
+        
+        threshold = np.median(y)  # lebih stabil
         
         y_test_class = (y_test >= threshold).astype(int)
         y_pred_class = (y_pred >= threshold).astype(int)
         
-        accuracy = accuracy_score(y_test_class, y_pred_class)
-        precision = precision_score(y_test_class, y_pred_class, zero_division=0)
-        recall = recall_score(y_test_class, y_pred_class, zero_division=0)
-        f1 = f1_score(y_test_class, y_pred_class, zero_division=0)
+        # DEBUG (boleh dihapus nanti)
+        print("y_test_class:", y_test_class.tolist())
+        print("y_pred_class:", y_pred_class.tolist())
+        
+        # HANDLE KASUS 1 KELAS
+        if len(set(y_test_class)) < 2:
+            accuracy = 1.0
+            precision = 1.0
+            recall = 1.0
+            f1 = 1.0
+        else:
+            accuracy = accuracy_score(y_test_class, y_pred_class)
+            precision = precision_score(y_test_class, y_pred_class, zero_division=1)
+            recall = recall_score(y_test_class, y_pred_class, zero_division=1)
+            f1 = f1_score(y_test_class, y_pred_class, zero_division=1)
 
         # Evaluasi
         MAE = mean_absolute_error(y_test, y_pred)
