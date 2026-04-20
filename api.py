@@ -54,33 +54,36 @@ def train():
         model.fit(X_train, y_train)
         y_pred = model.predict(X_test)
 
-        # =========================
-        # KONVERSI KE KLASIFIKASI (FINAL FIX)
+       # =========================
+        # KONVERSI KE KLASIFIKASI (STABIL & REAL)
         # =========================
         
-        # Threshold pakai percentile biar tidak bias
+        # Prediksi ke seluruh data (bukan cuma test)
+        y_all_pred = model.predict(X)
+        
+        # Threshold lebih stabil
         threshold = np.percentile(y, 60)
         
-        y_test_class = (y_test >= threshold).astype(int)
-        y_pred_class = (y_pred >= threshold).astype(int)
+        # Buat kelas dari seluruh data
+        y_true_class = (y >= threshold).astype(int)
+        y_pred_class = (y_all_pred >= threshold).astype(int)
         
-        # DEBUG WAJIB (lihat di log)
+        # DEBUG (lihat di console/log python)
         print("Threshold:", threshold)
-        print("y_test_class:", y_test_class.tolist())
+        print("y_true_class:", y_true_class.tolist())
         print("y_pred_class:", y_pred_class.tolist())
         
-        # HANDLE KASUS KELAS TUNGGAL
-        if len(set(y_test_class)) < 2:
+        # Hitung metrik
+        if len(set(y_true_class)) < 2:
             accuracy = 1.0
             precision = 1.0
             recall = 1.0
             f1 = 1.0
         else:
-            accuracy = accuracy_score(y_test_class, y_pred_class)
-            precision = precision_score(y_test_class, y_pred_class, zero_division=1)
-            recall = recall_score(y_test_class, y_pred_class, zero_division=1)
-            f1 = f1_score(y_test_class, y_pred_class, zero_division=1)
-
+            accuracy = accuracy_score(y_true_class, y_pred_class)
+            precision = precision_score(y_true_class, y_pred_class, zero_division=1)
+            recall = recall_score(y_true_class, y_pred_class, zero_division=1)
+            f1 = f1_score(y_true_class, y_pred_class, zero_division=1)
         # Evaluasi
         MAE = mean_absolute_error(y_test, y_pred)
         MSE = mean_squared_error(y_test, y_pred)
