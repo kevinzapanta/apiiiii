@@ -57,7 +57,7 @@ def train():
         # =========================
         # KONVERSI KE KLASIFIKASI
         # =========================
-        threshold = y_test.mean()
+        threshold = y.mean()
         
         y_test_class = (y_test >= threshold).astype(int)
         y_pred_class = (y_pred >= threshold).astype(int)
